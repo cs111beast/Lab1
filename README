@@ -2,3 +2,9 @@ This is a skeleton for CS 111 Lab 1.
 
 Replace this README file with notes on your implementation.
 Mentions any special features or limitations.
+
+Questions:
+
+1. How to allocate and reallocate memory for command_stream object
+	reallocation is probably done in parsing
+2. Subshell: parsing handle subshell instead? Tree will handle only || && |
