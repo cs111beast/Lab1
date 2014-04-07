@@ -7,32 +7,40 @@
 #include <stdio.h>
 #include "command-internals.h"
 
-typedef struct Node {
-	struct command payload;
-	struct Node* next;
+typedef struct Node
+{
+	struct command cmd;
+	struct Node* left;
+    struct Node* right;
 } Node;
 
-typedef struct command_stream {
-//    command_stream;
-//    ~command_stream;
-    struct command **arr;
-	struct command **heads;
-	int cur;
+typedef struct stack
+{
+    Node* obj;
+    Node* next;
+} stack;
+
+void
+s_push(stack* next, stack* new, Node* node)
+{
+    new->obj = node;
+    new->next = next;
+}
+
+stack*
+s_pop(stack* head)
+{
+    head = head->next;
+    return head;
+}
+
+typedef struct command_stream
+{
+    struct Node** arr;
+    int size;
+	int pos;
 } command_stream;
 
-
-// doesn't work
-//command_stream::command_stream()
-//{
-//    **arr = checked_malloc(512);
-//    **heads = checked_malloc(512);
-//}
-//
-//command_stream::~command_stream()
-//{
-//    free(arr);
-//    free(heads);
-//}
 
 void
 parse(int (*get_next_byte)(void *),
@@ -42,10 +50,64 @@ parse(int (*get_next_byte)(void *),
 void
 tree()
 {
+    int i;
+    for (i = 0; i < command_stream.size; i++)
+    {
+        Node* cur = command_stream.arr[i];
+        Node* next = cur->left;
+        /* if more than one simple command */
+        while (cur != NULL && next != NULL)
+        {
+            next = cur->left;
+            switch (cur->cmd.type) {
+                case SIMPLE_COMMAND:
+                    /* push on command stack */
+                    continue; break;
+                case AND_COMMAND:
+                    
+                    break;
+                case OR_COMMAND:
+                    break;
+                case PIPE_COMMAND:
+                    break;
+                case SEQUENCE_COMMAND:
+                    /* clear stacks */
+                    break;
+                case SUBSHELL_COMMAND:
+                    /* do something */
+                    break;
+            }
+            
+            
+            cur = next;
+        }
+    }
+
+}
+
+bool operatorPrecedence (enum command_type c1, enum command_type c2)
+{
+    /* set value to c1 based on precedence */
+    switch (c1) {
+        case AND_COMMAND:
+        case OR_COMMAND:
+            c1 = 1; break;
+        case PIPE_COMMAND:
+            c1 = 2; break;
+    }
+    /* set value to c1 based on precedence */
+    switch (c2) {
+        case AND_COMMAND:
+        case OR_COMMAND:
+            c2 = 1; break;
+        case PIPE_COMMAND:
+            c2 = 2; break;
+    }
     
-
-
-
+    /* return true if c1 has equal or higher precedence 
+     * with regard to c2 
+     */
+    return c1 >= c2;
 }
 
 struct command_stream stream;
