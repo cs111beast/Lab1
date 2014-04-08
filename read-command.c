@@ -13,24 +13,11 @@ typedef struct Node {
 } Node;
 
 typedef struct command_stream {
-	command_stream();
-    ~command_stream();
     struct command **arr;
-	struct command **heads;
-	int cur;
+    struct command **heads;
+    int cur;
 } command_stream;
 
-command_stream::command_stream()
-{
-    **arr = checked_malloc(512);
-    **heads = checked_malloc(512);
-}
-
-command_stream::~command_stream()
-{
-    free(arr);
-    free(heads);
-}
 
 void parse(int (*get_next_byte)(void *), 
 		void *get_next_byte_argument) 
