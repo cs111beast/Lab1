@@ -17,20 +17,24 @@ typedef struct Node
 typedef struct stack
 {
     Node* obj;
-    Node* next;
+    stack* next;
 } stack;
 
-void
-s_push(stack* next, stack* new, Node* node)
+stack*
+s_push(stack** head, stack* new, Node* node)
 {
     new->obj = node;
-    new->next = next;
+    new->next = head;
+    *head = new;
 }
 
 stack*
 s_pop(stack* head)
 {
-    head = head->next;
+    if (head != NULL)
+    {
+        head = head->next;
+    }
     return head;
 }
 
@@ -55,6 +59,9 @@ tree()
     {
         Node* cur = command_stream.arr[i];
         Node* next = cur->left;
+        
+        stack head = NULL;
+        
         /* if more than one simple command */
         while (cur != NULL && next != NULL)
         {
@@ -62,6 +69,7 @@ tree()
             switch (cur->cmd.type) {
                 case SIMPLE_COMMAND:
                     /* push on command stack */
+                    
                     continue; break;
                 case AND_COMMAND:
                     
