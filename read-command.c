@@ -65,6 +65,7 @@ void
 tree()
 {
     int i;
+    int treeCount = 0;
     for (i = 0; i < stream.numEntry; i++)
     {
         command* seq;
@@ -112,9 +113,8 @@ tree()
                     break;
             }
         }
+        clearStack(&treeCount);
     }
-    
-    clearStack();
     
     if ( treeCount != stream.numEntry)
         printf("treeCount error %d, should be %d",treeCount, stream.numEntry);
@@ -154,10 +154,15 @@ opHandler(command* cmd)
 }
 
 command*
-clearStack(void)
+clearStack(int* tc)
 {
     while (opstack.head != NULL && cstack.head != NULL) {
         command* top = s_pop(opstack);
+        if (opstack.head == NULL)
+        {
+            heads[*tc] = top;
+            (*tc)++;
+        }
         command* cmd2 = s_pop(cstack);
         command* cmd1 = s_pop(cstack);
         top->u.command[0] = cmd1;
